@@ -18,23 +18,25 @@ def process_ec2(region):
     ec2 = boto3.resource('ec2', region_name=region)
     for instance in ec2.instances.all():
         logging.debug(f'examining {instance.id}')
-        if has_no_name(instance):
+        if has_no_name(instance.tags):
             logging.info(f'terminating {instance.id} because it has no name')
             # instance.terminate()
-        elif too_old(instance):
+        elif too_old(instance.launch_time, instance.tags):
             logging.info(f'terminating {instance.id} because it has been running too long')
             # instance.terminate()
 
-def has_no_name(instance):
-    return not find_tag(instance.tags, 'Name')
+# shared code
 
-def too_old(instance):
-    if instance.launch_time > LAUNCH_TIME_THRESHOLD:
+def has_no_name(tags):
+    return not find_tag(tags, 'Name')
+
+def too_old(launch_time, tags):
+    if launch_time > LAUNCH_TIME_THRESHOLD:
         return False
-    deleteAfter = find_tag(instance.tags, 'DeleteAfter')
+    deleteAfter = find_tag(tags, 'DeleteAfter')
     if deleteAfter and date.today().isoformat() < deleteAfter:
         return False
-    logging.debug(f'too_old(): launch time = {instance.launch_time}, deleteAfter = {deleteAfter}')
+    logging.debug(f'too_old(): launch time = {launch_time}, deleteAfter = {deleteAfter}')
     return True
 
 def find_tag(tags, key):
