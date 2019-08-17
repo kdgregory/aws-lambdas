@@ -1,6 +1,9 @@
 import boto3
 import json
 import logging
+from datetime import *
+
+LAUNCH_TIME_THRESHOLD = datetime.now(timezone.utc) - timedelta(days=7)
 
 logging.basicConfig()
 logging.getLogger().setLevel(level=logging.INFO)
@@ -18,11 +21,25 @@ def process_ec2(region):
         if has_no_name(instance):
             logging.info(f'terminating {instance.id} because it has no name')
             # instance.terminate()
+        elif too_old(instance):
+            logging.info(f'terminating {instance.id} because it has been running too long')
+            # instance.terminate()
 
 def has_no_name(instance):
-    if not instance.tags:
-        return True
-    for tag in instance.tags:
-        if tag['Key'] == 'Name':
-            return False
+    return not find_tag(instance.tags, 'Name')
+
+def too_old(instance):
+    if instance.launch_time > LAUNCH_TIME_THRESHOLD:
+        return False
+    deleteAfter = find_tag(instance.tags, 'DeleteAfter')
+    if deleteAfter and date.today().isoformat() < deleteAfter:
+        return False
+    logging.debug(f'too_old(): launch time = {instance.launch_time}, deleteAfter = {deleteAfter}')
     return True
+
+def find_tag(tags, key):
+    if tags:
+        for tag in tags:
+            if tag['Key'] == key:
+                return tag['Value']
+    return None
