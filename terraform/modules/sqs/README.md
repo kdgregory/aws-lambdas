@@ -31,12 +31,19 @@ configuration.
 
 * `retention_days`
 
-  The number of days to retain unprocessed messages. This module uses days, rather
-  than seconds, because I believe that it improves maintainability. You can use a
-  decimal number (eg, 0.5 for half a day), although small numbers won't be exact
-  (for example, if you want an hour, 0.0417 is 3602 seconds).
+  The number of days that the primary queue retains unprocessed messages. This module
+  uses days for this value, rather than seconds, because I believe that it improves
+  maintainability. You can use a decimal number (eg, 0.5 for half a day), although
+  small numbers won't be exact (eg, if you want an hour, 0.0417 is 3602 seconds).
 
   Default: 4 (SQS default)
+
+* `dlq_retention_days`
+
+  The number of days that the dead letter queue retains unprocessed messages. As with
+  `message_retention_days`, this is specified in days.
+
+  Default: value of `dlq_retention_days`
 
 * `retry_count`
 

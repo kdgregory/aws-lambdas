@@ -10,9 +10,15 @@ variable "visibility_timeout_seconds" {
 }
 
 variable "message_retention_days" {
-  description = "The number of days that a message can remain in the queue without being processed"
+  description = "The number of days that a message will remain in the primary queue without being processed"
   type        = number
   default     = 4
+}
+
+variable "dlq_retention_days" {
+  description = "The number of days that a message will remain in the dead letter queue without being processed"
+  type        = number
+  default     = null
 }
 
 variable "retry_count" {
