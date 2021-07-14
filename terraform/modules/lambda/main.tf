@@ -76,10 +76,10 @@ resource "aws_iam_role" "execution_role" {
 
 
 resource "aws_iam_role_policy" "logging_policy" {
-  name = "Logging"
-  role = aws_iam_role.execution_role.id
+  name    = "Logging"
+  role    = aws_iam_role.execution_role.id
 
-  policy = jsonencode({
+  policy  = jsonencode({
     Version = "2012-10-17"
     Statement = [
       {
@@ -100,10 +100,12 @@ resource "aws_iam_role_policy" "logging_policy" {
 
 
 resource "aws_iam_role_policy" "vpc_policy" {
-  name = "VPC_Attachment"
-  role = aws_iam_role.execution_role.id
+  for_each  = local.deploy_in_vpc
 
-  policy = jsonencode({
+  name      = "VPC_Attachment"
+  role      = aws_iam_role.execution_role.id
+
+  policy    = jsonencode({
     Version = "2012-10-17"
     Statement = [
       {
