@@ -27,3 +27,8 @@ variable "retry_count" {
   default     = null
 }
 
+variable "tags" {
+  description = "Tags that are applied to all resources"
+  type        = map(string)
+  default     = null
+}

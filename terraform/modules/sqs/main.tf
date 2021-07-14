@@ -57,14 +57,19 @@ resource "aws_sqs_queue" "primary" {
   visibility_timeout_seconds  = var.visibility_timeout_seconds
   message_retention_seconds   = floor(var.message_retention_days * 86400)
   redrive_policy              = local.redrive_policy
+
+  tags                        = var.tags
 }
 
 
 resource "aws_sqs_queue" "dlq" {
   for_each                    = local.dlq_iter
+
   name                        = "${var.name}-dlq"
   visibility_timeout_seconds  = var.visibility_timeout_seconds
   message_retention_seconds   = floor(local.dlq_retention_days * 86400)
+
+  tags                        = var.tags
 }
 
 
@@ -76,6 +81,7 @@ resource "aws_iam_policy" "consumer_policy" {
                   Version = "2012-10-17"
                   Statement = [ local.consumer_policy_statement ]
                 })
+  tags        = var.tags
 }
 
 
@@ -87,4 +93,5 @@ resource "aws_iam_policy" "producer_policy" {
                   Version = "2012-10-17"
                   Statement = [ local.producer_policy_statement ]
                 })
+  tags        = var.tags
 }
