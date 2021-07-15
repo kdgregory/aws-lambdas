@@ -10,7 +10,7 @@ terraform {
 
 locals {
   do_upload   = var.overwrite || (length(data.aws_s3_bucket_objects.existing.keys) == 0)
-  etag        = local.do_upload ? filemd5(var.filename) : null
+  etag        = local.do_upload ? filemd5(var.source) : null
 }
 
 
