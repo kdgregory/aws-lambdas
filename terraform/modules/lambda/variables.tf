@@ -82,7 +82,7 @@ variable "env" {
 variable "tags" {
   description = "Tags that are applied to all resources"
   type        = map(string)
-  default     = null
+  default     = {}
 }
 
 variable "log_retention" {
