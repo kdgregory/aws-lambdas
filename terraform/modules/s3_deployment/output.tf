@@ -1,5 +1,5 @@
 output "s3_bucket" {
-  description = 
+  description = "The bucket used to hold deployment artifacts"
   value       = var.s3_bucket
 }
 
