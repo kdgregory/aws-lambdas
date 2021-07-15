@@ -10,7 +10,7 @@ variable "s3_key" {
   default     = null
 }
 
-variable "source" {
+variable "filename" {
   description = "The name of a local file containing the deployment bundle"
   type        = string
 }

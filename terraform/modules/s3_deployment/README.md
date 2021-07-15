@@ -26,7 +26,7 @@ if it does.
 
   Default: none; you must specify this.
 
-* `source`
+* `filename`
 
   The name of a local file containing the deployment bundle. If you omit this,
   and the bundle does not already exist on S3, apply will fail.
